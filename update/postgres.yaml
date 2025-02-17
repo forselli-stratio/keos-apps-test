@@ -1,0 +1,20 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: postgres
+spec:
+  image: "qa.int.stratio.com:11443/stratio/postgresql-task"
+  interval: 12h
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: postgres
+spec:
+  imageRepositoryRef:
+    name: postgres
+  policy:
+    semver:
+      range: ">=0.8.2"
