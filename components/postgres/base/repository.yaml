@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: nixys
+  namespace: kube-system
+spec:
+  interval: 10m
+  provider: generic
+  type: default
+  url: https://registry.nixys.io/chartrepo/public

@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+  - values.yaml
+patches:
+  - target:
+      kind: HelmRelease
+      name: psql
+    patch: |-
+      - op: add
+        path: /spec/valuesFrom/-
+        value:
+          kind: ConfigMap
+          name: "01-psql-helm-chart-override-values"
+          valuesKey: values.yaml
