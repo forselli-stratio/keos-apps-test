@@ -2,7 +2,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: 00-psql-helm-chart-default-values
-  namespace: stratio-datastores
 data:
   values.yaml: |-
     extraDeploy:
@@ -11,7 +10,6 @@ data:
         apiVersion: "postgres.stratio.com/v1"
         metadata:
           name: "psql"
-          namespace: "stratio-datastores"
         spec:
           autoscaler:
             vertical:
