@@ -4,4 +4,3 @@ namespace: stratio-datastores
 resources:
   - repository.yaml
   - postgres.yaml
-  - values.yaml
