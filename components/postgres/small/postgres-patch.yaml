@@ -1,0 +1,9 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: psql
+spec:
+  valuesFrom:
+    - kind: ConfigMap
+      name: "01-psql-helm-chart-extra-values"
+      valuesKey: values.yaml
