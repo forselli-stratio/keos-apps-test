@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: nixys
-        namespace: kube-system
+        namespace: stratio-datastores
       interval: 1m
   interval: 1m
   timeout: 10m
