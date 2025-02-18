@@ -1,9 +1,0 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: HelmRepository
-metadata:
-  name: nixys
-spec:
-  interval: 1m
-  provider: generic
-  type: default
-  url: https://registry.nixys.io/chartrepo/public
