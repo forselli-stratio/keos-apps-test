@@ -1,34 +1,36 @@
-kind: "PgCluster"
-apiVersion: "postgres.stratio.com/v1"
+apiVersion: postgres.stratio.com/v1
+kind: PgCluster
 metadata:
-  name: "psql"
+  name: psql
+  annotations:
+    PGClusterNeedSecurized: "true"
 spec:
   autoscaler:
     vertical:
       enable: true
       resources:
         controlledResources:
-          - "cpu"
-          - "memory"
-        controlledValues: "RequestsAndLimits"
+        - cpu
+        - memory
+        controlledValues: RequestsAndLimits
       updatePolicy:
         minReplicas: 1
         updateMode: "Off"
   backup:
     pgbackrest:
-      logLevel: "detail"
+      logLevel: detail
       name: ""
       namespace: ""
       pgRepositroniPort: 8008
       port: 8432
       repository:
-        - id: 1
-          storageVerifyTls: "n"
-          type: "posix"
+      - id: 1
+        storageVerifyTls: "n"
+        type: posix
     walArchiver: false
   bootstrap:
     pgbackrest:
-      logLevel: "detail"
+      logLevel: detail
       name: ""
       namespace: ""
       pgRepositroniPort: 8008
@@ -37,18 +39,29 @@ spec:
         cipher:
           enable: false
           secretsBundle:
-            name: "cipher"
-            namespace: "keos-core"
+            name: cipher
+            namespace: keos-core
         id: 1
         s3:
-          UriStyle: "path"
-          region: "us-west-2"
+          UriStyle: path
+          region: us-west-2
           secretsBundle:
-            name: "s3"
-            namespace: "keos-core"
+            name: s3
+            namespace: keos-core
         storageVerifyTls: "n"
-        type: "posix"
-    type: "initdb"
+        type: posix
+    type: initdb
+  constraints:
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: pgcluster.stratio.com/pgcluster-name
+              operator: In
+              values:
+              - psql
+          topologyKey: kubernetes.io/hostname
   healthchecks:
     livenessProbe:
       failureThreshold: 3
@@ -62,12 +75,12 @@ spec:
       periodSeconds: 15
       successThreshold: 1
       timeoutSeconds: 1
-  image: "qa.int.stratio.com:11443/stratio/postgresql-task:0.8.2"
-  imagePullPolicy: "Always"
+  image: qa.int.stratio.com:11443/stratio/postgresql-task:0.8.2
+  imagePullPolicy: Always
   instances: 3
   monitoring:
     enable: true
-    interval: "30s"
+    interval: 30s
   patroni:
     dcs:
       check_timeline: false
@@ -80,14 +93,14 @@ spec:
       maximum_lag_on_syncnode: -1
       retry_timeout: 10
       ttl: 30
-    logLevel: "INFO"
+    logLevel: INFO
     postgresql:
       remove_data_directory_on_diverged_timelines: false
       remove_data_directory_on_rewind_failure: true
       use_pg_rewind: true
       use_slots: true
   pgtroni:
-    logLevel: "INFO"
+    logLevel: INFO
     timeout: 60
   podDisruptionBudget:
     primary:
@@ -102,61 +115,61 @@ spec:
   postgresql:
     config:
       checkpoint_completion_target: "0.9"
-      effective_cache_size: "3GB"
+      effective_cache_size: 3GB
       effective_io_concurrency: "300"
       random_page_cost: "1.1"
-      shared_buffers: "1GB"
-      shared_preload_libraries: "pg_stat_statements"
-      wal_buffers: "16MB"
+      shared_buffers: 1GB
+      shared_preload_libraries: pg_stat_statements
+      wal_buffers: 16MB
       wal_compression: "on"
-      wal_level: "logical"
-    encoding: "UTF-8"
-    logLevel: "INFO"
+      wal_level: logical
+    encoding: UTF-8
+    logLevel: INFO
     replication:
       synchronous_node_count: 1
-      type: "SYNC"
+      type: SYNC
     version: "14"
     wal-segsize: 16
-  priorityClassName: "applications-critical"
+  priorityClassName: applications-critical
   resources:
     limits:
       cpu: "8"
-      memory: "2048M"
+      memory: 2048M
     requests:
-      cpu: "500m"
-      memory: "2048M"
+      cpu: 500m
+      memory: 2048M
   secrets:
     create: true
   security:
-    authentication: "CERT"
-    authorization: "CENTRALIZED"
+    authentication: CERT
+    authorization: CENTRALIZED
     gosec:
       config:
         agent:
-          conflict_resolution: "AND"
+          conflict_resolution: AND
           consecutive_failures: "-1"
           domains_enable: "false"
-          domains_mapping_url: "https://dg-businessglossary-api.keos-core:60000/dictionary"
+          domains_mapping_url: https://dg-businessglossary-api.keos-core:60000/dictionary
           domains_mappins_url_timeout_ms: "3000"
-          domains_policies_url: "https://gosec-services-daas.keos-core:8443"
+          domains_policies_url: https://gosec-services-daas.keos-core:8443
           domains_policies_url_timeouts_ms: "3000"
           number_iterations: "-1"
           number_threads: "300"
-          orphan_policy: "DENY"
+          orphan_policy: DENY
           sleep_in_ms: "15000"
         postgres:
           connect_timeout: "30"
-          groups_prefix: "stratio_group_"
+          groups_prefix: stratio_group_
           keep_connections: "true"
           login_timeout: "30"
           max_pool_size: "2"
           query_batch_size: "2500"
           reparent_enable: "false"
-          resources_whitelist: "columns"
+          resources_whitelist: columns
           revoke_public: "true"
           socket_timeout: "30"
           statement_timeout: "30"
-          work_mem: "32MB"
+          work_mem: 32MB
       enable: false
       healthchecks:
         livenessProbe:
@@ -172,42 +185,41 @@ spec:
           successThreshold: 1
           timeoutSeconds: 1
       image: ""
-      imagePullPolicy: "Always"
+      imagePullPolicy: Always
       instances: 1
-      logLevel: "INFO"
+      logLevel: INFO
       monitoring:
         enable: true
-        interval: "30s"
-      resources: {}
+        interval: 30s
       urls:
-        identities: "https://gosec-identities-daas.keos-core:8443"
-        services: "https://gosec-services-daas.keos-core:8443"
+        identities: https://gosec-identities-daas.keos-core:8443
+        services: https://gosec-services-daas.keos-core:8443
         timeout: 3000
     serviceAccount:
       create: true
-      name: "psql"
+      name: psql
     users:
-      dbaas: "dbaas"
-      patroni: "patroni"
-      postgres: "postgres"
-      replicator: "replicator"
-      rewind: "rewind"
-      service: "service"
+      dbaas: dbaas
+      patroni: patroni
+      postgres: postgres
+      replicator: replicator
+      rewind: rewind
+      service: service
   storage:
     data:
       accessModes:
-        - "ReadWriteOnce"
+      - ReadWriteOnce
       resources:
         requests:
-          storage: "20Gi"
+          storage: 20Gi
     enableShmVolume: true
     wal:
       accessModes:
-        - "ReadWriteOnce"
+      - ReadWriteOnce
       resources:
         requests:
-          storage: "10Gi"
+          storage: 10Gi
   updateStrategy:
     rollingUpdate:
       partition: 0
-    type: "RollingUpdate"
+    type: RollingUpdate

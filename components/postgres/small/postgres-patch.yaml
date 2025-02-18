@@ -1,7 +1,6 @@
-kind: "PgCluster"
-apiVersion: "postgres.stratio.com/v1"
+apiVersion: postgres.stratio.com/v1
+kind: PgCluster
 metadata:
-  name: "psql"
+  name: psql
 spec:
   instances: 1
-
