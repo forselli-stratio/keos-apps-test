@@ -49,17 +49,6 @@ spec:
         storageVerifyTls: "n"
         type: "posix"
     type: "initdb"
-  constraints:
-    affinity:
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-            - key: pgcluster.stratio.com/pgcluster-name
-              operator: In
-              values:
-              - psql
-          topologyKey: kubernetes.io/hostname
   healthchecks:
     livenessProbe:
       failureThreshold: 3
