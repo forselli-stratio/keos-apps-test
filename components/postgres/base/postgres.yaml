@@ -53,7 +53,7 @@ spec:
     affinity:
       podAntiAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
-          -   labelSelector:
+          - labelSelector:
               matchExpressions:
                 - key: "pgcluster.stratio.com/pgcluster-name"
                   operator: "In"
