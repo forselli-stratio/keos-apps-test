@@ -1,9 +1,9 @@
 apiVersion: postgres.stratio.com/v1
 kind: PgCluster
 metadata:
-  name: psql
   annotations:
     PGClusterNeedSecurized: "true"
+  name: psql
 spec:
   autoscaler:
     vertical:
@@ -17,39 +17,8 @@ spec:
         minReplicas: 1
         updateMode: "Off"
   backup:
-    pgbackrest:
-      logLevel: detail
-      name: ""
-      namespace: ""
-      pgRepositroniPort: 8008
-      port: 8432
-      repository:
-      - id: 1
-        storageVerifyTls: "n"
-        type: posix
     walArchiver: false
   bootstrap:
-    pgbackrest:
-      logLevel: detail
-      name: ""
-      namespace: ""
-      pgRepositroniPort: 8008
-      port: 8432
-      repository:
-        cipher:
-          enable: false
-          secretsBundle:
-            name: cipher
-            namespace: keos-core
-        id: 1
-        s3:
-          UriStyle: path
-          region: us-west-2
-          secretsBundle:
-            name: s3
-            namespace: keos-core
-        storageVerifyTls: "n"
-        type: posix
     type: initdb
   constraints:
     affinity:
@@ -75,9 +44,9 @@ spec:
       periodSeconds: 15
       successThreshold: 1
       timeoutSeconds: 1
-  image: qa.int.stratio.com:11443/stratio/postgresql-task:0.8.2
+  image: qa.int.stratio.com:11443/stratio/postgresql-task:0.9.1-865f097
   imagePullPolicy: Always
-  instances: 3
+  instances: 1
   monitoring:
     enable: true
     interval: 30s
