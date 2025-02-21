@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
   - ../base
 patches:
-  - path: postgres-patch.yaml
+  - path: postgres.yaml
