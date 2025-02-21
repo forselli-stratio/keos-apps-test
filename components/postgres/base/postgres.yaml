@@ -2,7 +2,7 @@ apiVersion: postgres.stratio.com/v1
 kind: PgCluster
 metadata:
   annotations:
-    PGClusterNeedSecurized: "true"
+    PGClusterNeedSecurized: "false"
   name: psql
 spec:
   autoscaler:
