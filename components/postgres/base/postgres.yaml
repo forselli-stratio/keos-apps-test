@@ -44,7 +44,7 @@ spec:
       periodSeconds: 15
       successThreshold: 1
       timeoutSeconds: 1
-  image: qa.int.stratio.com:11443/stratio/postgresql-task:0.8.2
+  image: qa.int.stratio.com:11443/stratio/postgresql-task:0.9.1-865f097
   imagePullPolicy: Always
   instances: 1
   monitoring:
