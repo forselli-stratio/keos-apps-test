@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 00-nginx-connectors-helm-chart-default-values
+data:
+  values.yaml: |
+    ---
+    deployments:
+      nginx-connectors:
+        labels:
+          app: nginx-connectors
+        podLabels: {}
+        podAnnotations: {}
+        replicas: 1
+        extraSelectorLabels:
+          app: nginx-connectors
+        serviceAccountName: ""
+        containers:
+          - name: nginx
+            image: qa.int.stratio.com/nginx
+            imageTag: 1.17.6-alpine
+            env: []
+            envsFromSecret: {}
+            envSecrets: []
+            envsFromConfigmap: {}
+            envConfigmaps: []
+            volumeMounts:
+              - name: nginx-connectors-data
+                mountPath: /usr/share/nginx/html
+        volumes:
+          - name: nginx-connectors-data
+            persistentVolumeClaim:
+              claimName: nginx-connectors-data
+    pvcs:
+      nginx-connectors-data:
+        accessModes:
+          - ReadWriteOnce
+        size: 1Gi
+    services:
+      nginx-connectors:
+        clusterIP: None
+        ports:
+          - name: 80-80
+            port: 80
+            protocol: TCP
+            targetPort: 80
+        extraSelectorLabels:
+          app: nginx-connectors
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 02-nginx-connectors-helm-chart-override-values
+data:
+  values.yaml: ""
