@@ -39,7 +39,7 @@ data:
           - ReadWriteOnce
         size: 1Gi
     services:
-      nginx-connectors:
+      http:
         clusterIP: None
         ports:
           - name: 80-80
