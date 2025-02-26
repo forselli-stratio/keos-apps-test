@@ -33,7 +33,7 @@ data:
             persistentVolumeClaim:
               claimName: nginx-connectors-data
     pvcs:
-      nginx-connectors-data:
+      data:
         accessModes:
           - ReadWriteOnce
         size: 1Gi
