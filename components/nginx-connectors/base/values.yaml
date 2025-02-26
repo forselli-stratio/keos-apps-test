@@ -30,6 +30,7 @@ data:
                 mountPath: /usr/share/nginx/html
         volumes:
           - name: nginx-connectors-data
+            type: pvc
             persistentVolumeClaim:
               claimName: nginx-connectors-data
     pvcs:
