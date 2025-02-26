@@ -32,7 +32,7 @@ data:
           - name: nginx-connectors-data
             type: pvc
             persistentVolumeClaim:
-              claimName: nginx-connectors-data
+              claimName: data
     pvcs:
       data:
         accessModes:
