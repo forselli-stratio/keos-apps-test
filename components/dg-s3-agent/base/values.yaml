@@ -1,0 +1,344 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 00-dg-s3-agent-helm-chart-default-values
+data:
+  values.yaml: |
+    ---
+    releasePrefix: "-"
+    deployments:
+      dg-s3-agent:
+        name: dg-s3-agent
+        labels:
+          app: dg-s3-agent
+        podLabels: {}
+        podAnnotations: {}
+        replicas: 1
+        extraSelectorLabels:
+          app: dg-s3-agent
+        serviceAccountName: dg-s3-agent
+        containers:
+          - name: dg-s3-agent
+            image: qa.int.stratio.com:11443/stratio/dg-custom-agent_2.12
+            imageTag: 0.7.0
+            livenessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: /health/status/self
+                port: metrics
+                scheme: HTTP
+              initialDelaySeconds: 60
+              periodSeconds: 120
+              successThreshold: 1
+              terminationGracePeriodSeconds: 30
+              timeoutSeconds: 60
+            ports:
+            - containerPort: 13421
+              name: metrics
+              protocol: TCP
+            readinessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: /health/status/self
+                port: metrics
+                scheme: HTTP
+              initialDelaySeconds: 60
+              periodSeconds: 120
+              successThreshold: 1
+              timeoutSeconds: 60
+            resources:
+              limits:
+                cpu: "8"
+                memory: "2.048E9"
+              requests:
+                cpu: 500m
+                memory: "2.048E9"
+            securityContext:
+              allowPrivilegeEscalation: false
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+
+            env:
+              - name: CUSTOM_SERVICE_DS_DRIVER
+                value: com.stratio.connectors.ssccs3.S3DriverServiceAccount
+              - name: GOVERNANCE_DEPLOYMENT
+                value: dg-businessglossary-api.keos-core
+              - name: CUSTOM_STRATIO_CONFIG_MAP
+                value: keos-kerberos-config
+              - name: DISCOVERY_PAGE_SIZE
+                value: "30"
+              - name: EXTRACT_PATH
+                value: dg-s3-agent.stratio-datastores
+              - name: DATASTORE_DATABASE
+                value: postgreskeos
+              - name: VAULT_ROLE
+                value: stratio-datastores-dg-s3-agent
+              - name: COMM_EXTRACT_CLASS_NAME
+                value: com.stratio.governance.agent.custom.extractor.CustomExtractor
+              - name: COMM_DISCOVERY_FULL_CRON_PERIOD
+                value: 0 * * * * ?
+              - name: CUSTOM_SERVICE_SKIP_RESOURCES_REGEX
+              - name: DB_CA_PATH
+                value: ca-trust
+              - name: AGENT_SERVER_ADAPTIVE_HEALTHCHECK_DELAY_FACTOR
+                value: "2.0"
+              - name: COMM_DS_DRIVER_NAME
+                value: org.postgresql.Driver
+              - name: NOTIFY_TO_AUTOMATION
+                value: "true"
+              - name: COMM_DISCOVERY_PERSISTENCE_MODE
+                value: DIRECT
+              - name: METRICS_ENABLED
+                value: "false"
+              - name: COMM_SERVICE_VENDOR
+                value: Amazon
+              - name: CUSTOM_SERVICE_SSCC_DRIVER_LOCATION
+                value: http://dg-s3-agent.stratio-apps/sscc-s3-0.3_2.12-1.3.3-a14adae.jar
+              - name: JDBC_DISCOVERY_LEGACY_MODE
+                value: "false"
+              - name: LEVERAGED_CONSTRAINTS
+                value: "true"
+              - name: SERVICE_ACCOUNT_NAME
+                valueFrom:
+                  fieldRef:
+                    apiVersion: v1
+                    fieldPath: spec.serviceAccountName
+              - name: COMM_SERVICE_TENANT
+                value: stratio
+              - name: COMM_SERVICE_NAME
+                value: dg-s3-agent
+              - name: EXTRACT_CA_PATH
+                value: ca-trust
+              - name: HOST
+                valueFrom:
+                  fieldRef:
+                    apiVersion: v1
+                    fieldPath: status.podIP
+              - name: COMM_DS_USER
+                value: dg-bootstrap
+              - name: AGENT_SERVER_ADAPTIVE_HEALTHCHECK_MAXIMUM_DELAY
+                value: 1 hour
+              - name: AGENT_ROLE_ID
+                value: BDL
+              - name: NATIVE_MODE
+                value: "true"
+              - name: DISCOVERY_MANAGEMENT_BASE_URI
+                value: http://dg-discovery-manager.keos-core:8091/actuator
+              - name: AGENT_SERVER_HEALTHCHECK_ENABLED
+                value: "true"
+              - name: COMM_DS_MAX_POOL_SIZE
+                value: "4"
+              - name: STEP_POSTGRES
+                value: TLS
+              - name: CUSTOM_SERVICE_EXTRACTOR_TYPE
+                value: AmazonS3
+              - name: DISCOVERY_BASE_URI
+                value: https://dg-discovery-manager.keos-core:61000/discovery
+              - name: CUSTOM_SERVICE_SKIP_PATHS_WITH_RESOURCES_REGEX
+              - name: COMM_DS_URL_LL
+                value: jdbc:postgresql://pgbouncer-postgreskeos-governance.keos-core/postgreskeos?prepareThreshold=0
+              - name: CUSTOM_SERVICE_SKIP_PATHS_REGEX
+              - name: CUSTOM_DS_CHECK_HEALTHY_STRATEGY
+                value: all-success
+              - name: STEP_EXTRACT
+                value: MD5
+              - name: AGENT_SERVER_PROMETHEUS_ENABLED
+                value: "true"
+              - name: VAULT_PORT
+                value: "8200"
+              - name: AGENT_SERVER_ADAPTIVE_HEALTHCHECK_INITIAL_DELAY
+                value: 15 seconds
+              - name: NOTIFY_UPDATED_FIELDS_TO_AUTOMATION
+                value: "true"
+              - name: DB_CERT_FQDN
+                value: dg-bootstrap
+              - name: AGENT_LOG_LEVEL
+                value: INFO
+              - name: DB_CERT_INSTANCE
+                value: dg-bootstrap
+              - name: DATASTORE_TLS_ENABLE
+                value: "true"
+              - name: NAME_ID
+                value: dg-s3-agent
+              - name: COMM_CUSTOM_PARAMETERS_DISCOVERY_REQUESTS_ENABLED
+                value: "true"
+              - name: USE_DYNAMIC_AUTHENTICATION
+                value: "true"
+              - name: STEP_SECRETS
+                value: "true"
+              - name: DATASTORE_HOST
+                value: pgbouncer-postgreskeos-governance.keos-core
+              - name: DFS_CSV_FORCE_USE_VALID_HEADERS
+                value: "true"
+              - name: SMART_POOL_TIMEOUT_IN_SECONDS
+                value: "60"
+              - name: COMM_DISCOVERY_CRON_PERIOD
+                value: "3600000"
+              - name: NOTIFY_DELETED_FIELDS_TO_AUTOMATION
+                value: "true"
+              - name: S3_ENABLE_PROXY
+                value: "false"
+              - name: SMART_POOL_CORE_POOL_SIZE
+                value: "0"
+              - name: LOGIC_LAYER_SYNCHRONIZATION
+                value: "true"
+              - name: COMM_DS_URL
+                value: jdbc:postgresql://pgbouncer-postgreskeos-governance.keos-core/postgreskeos?prepareThreshold=0
+              - name: VAULT_PATH
+                value: userland
+              - name: COMM_DISCOVERY_ONLY_NEW_ASSETS
+                value: "false"
+              - name: DEBUG
+                value: "false"
+              - name: EXTRACT_INSTANCE
+                value: dg-s3-agent.stratio-datastores
+              - name: PORT_13421
+                value: "13421"
+              - name: DISCOVERY_DEPLOYMENT
+                value: dg-discovery-manager.keos-core
+              - name: CUSTOM_SERVICE_DS_DRIVER_LOCATION
+                value: http://dg-s3-agent.stratio-apps/sscc-s3-0.3_2.12-1.3.3-a14adae.jar
+              - name: AGENT_LOGGING_TYPE
+                value: CentralizedJSON
+              - name: COMM_LOGIC_SCHEMA
+                value: dg_metadata.data_asset
+              - name: CUSTOM_SERVICE_RESOURCES_REGEX
+              - name: DB_CA_INSTANCE
+                value: default
+              - name: COMM_CACHE_PATH
+                value: /cache
+              - name: S3_ENABLE_PROXY_AUTH
+                value: "false"
+              - name: DISCOVERY_MANAGER_SERVICE_ENABLED
+                value: "true"
+              - name: CUSTOM_SERVICE_URL
+                value: '-'
+              - name: COMM_SERVICE_TYPE
+                value: AmazonS3
+              - name: COMM_SERVICE_INIT_PATH
+                value: /buckets
+              - name: CUSTOM_SERVICE_DS_SECURITY
+                value: ServiceAccount
+              - name: EXTRACT_CA_INSTANCE
+                value: default
+              - name: CUSTOM_SERVICE_SKIP_RESOURCES_AT_ROOT_PATH
+                value: "true"
+              - name: COMM_DS_PASSWORD
+                value: stratio
+              - name: AGENT_SERVER_ADAPTIVE_HEALTHCHECK_MINIMUM_DELAY
+                value: 5 seconds
+              - name: AGENT_SERVER_PROMETHEUS_PATH
+                value: metrics
+              - name: CUSTOM_STRATIO_CREDENTIALS
+                value: customer-s3-secret
+              - name: COMM_DISCOVERY_DIRECT_KEEP_DISCOVERY_REQUESTS
+                value: "true"
+              - name: AGENT_SERVER_PROMETHEUS_CHROOT
+                value: /
+              - name: AGENT_SERVER_HEALTHCHECK_PATH
+                value: status
+              - name: GOVERNANCE_BASE_URI
+                value: https://dg-businessglossary-api.keos-core:60000/dictionary
+              - name: CUSTOM_SERVICE_EXTRACTOR_VENDOR
+                value: Amazon
+              - name: AGENT_SERVER_ASYNCHRONOUS_HEALTHCHECK_DELAY
+                value: 30 seconds
+              - name: COMM_DISCOVERY_FIRST_ITERATION_IS_FORCED
+                value: "true"
+              - name: CHARS_ALLOWANCE_LEVEL
+                value: "2"
+              - name: SMART_POOL_MAX_POOL_SIZE
+                value: "2048"
+              - name: FETCH_ENABLED
+                value: "true"
+              - name: CUSTOM_SERVICE_PATHS_REGEX_BEHAVIOUR
+                value: NAME
+              - name: AGENT_SERVER_HEALTHCHECK_CHROOT
+                value: health
+              - name: GOVERNANCE_MANAGEMENT_BASE_URI
+                value: http://dg-businessglossary-api.keos-core:8092/actuator
+              - name: CUSTOM_SERVICE_PATHS_WITH_RESOURCES_REGEX
+              - name: METRICS_PORT
+                value: "8085"
+              - name: CUSTOM_SERVICE_PATHS_REGEX
+              - name: COMM_ACTOR_SYSTEM_BACKOFF_RETRY
+                value: "5"
+              - name: COMM_BACKOFF_RETRY
+                value: "4"
+              - name: VAULT_HOSTS
+                value: vault.keos-core
+              - name: DB_CERT_PATH
+                value: dg-bootstrap.keos-core
+            envsFromSecret: {}
+            envSecrets: []
+            envsFromConfigmap: {}
+            envConfigmaps: []
+    services:
+      http:
+        clusterIP: None
+        ports:
+          - name: metrics
+            port: 13421
+        extraSelectorLabels:
+          app: dg-s3-agent
+    serviceAccount:
+    dg-s3-agent: {}
+    serviceMonitors:
+    dg-s3-agent:
+      endpoints:
+      - interval: 30s
+        port: metrics
+        path: /metrics
+      extraSelectorLabels:
+        app: dg-s3-agent
+      labels: {}
+    extraDeploy:
+      secretsbundle: |-
+        apiVersion: secrets.stratio.com/v2
+        kind: SecretsBundle
+        metadata:
+          name: dg-s3-agent
+          namespace: stratio-datastores
+          annotations:
+            secrets.stratio.com/sync-secret: stratio-datastores/dg-s3-agent-s3
+        spec:
+          certificates:
+          - name: dg-s3-agent.stratio-datastores
+          passwords:
+          - name: dg-s3-agent-stratio-datastores
+          - name: keystore
+          - name: customer-s3-secret
+      secretsidentity: |-
+        apiVersion: secrets.stratio.com/v2
+        kind: SecretsIdentity
+        metadata:
+          name: dg-s3-agent
+          namespace: stratio-datastores
+        spec:
+          bundles:
+          - name: dg-s3-agent
+          subject:
+            kind: ServiceAccount
+            name: dg-s3-agent
+            namespace: stratio-datastores
+        ---
+        apiVersion: secrets.stratio.com/v2
+        kind: SecretsIdentity
+        metadata:
+          name: dg-s3-agent-stratio-datastores
+          namespace: keos-core
+        spec:
+          bundles:
+          - name: dg-bootstrap
+          subject:
+            kind: ServiceAccount
+            name: dg-s3-agent
+            namespace: stratio-datastores
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 02-dg-s3-agent-helm-chart-override-values
+data:
+  values.yaml: ""

@@ -1,0 +1,66 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: dg-s3-agent-secrets
+spec:
+  serviceAccountName: kustomize-controller
+  interval: 5m
+  retryInterval: 3m
+  path: ./clusters/${CLUSTER_NAME}/secrets/dg-s3-agent
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: flux-runtime-info
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: nixys
+spec:
+  interval: 1m
+  provider: generic
+  type: default
+  url: https://registry.nixys.io/chartrepo/public
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: dg-s3-agent
+spec:
+  releaseName: dg-s3-agent
+  chart:
+    spec:
+      chart: nxs-universal-chart
+      version: 2.8.3
+      sourceRef:
+        kind: HelmRepository
+        name: nixys
+      interval: 1m
+  interval: 1m
+  timeout: 10m
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    force: false
+  valuesFrom:
+    - kind: ConfigMap
+      name: 00-dg-s3-agent-helm-chart-default-values
+      valuesKey: values.yaml
+    - kind: ConfigMap
+      name: 02-dg-s3-agent-helm-chart-override-values
+      valuesKey: values.yaml
