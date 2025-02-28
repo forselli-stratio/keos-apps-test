@@ -5,6 +5,7 @@ metadata:
   name: dg-s3-agent-secrets
 spec:
   serviceAccountName: flux-apps
+  targetNamespace: stratio-apps
   interval: 5m
   retryInterval: 3m
   path: ./clusters/${CLUSTER_NAME}/secrets/dg-s3-agent
@@ -12,10 +13,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  postBuild:
-    substituteFrom:
-      - kind: ConfigMap
-        name: flux-runtime-info
   decryption:
     provider: sops
     secretRef:
