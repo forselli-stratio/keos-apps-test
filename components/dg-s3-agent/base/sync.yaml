@@ -5,7 +5,7 @@ metadata:
   name: dg-s3-agent-secrets
 spec:
   serviceAccountName: flux-apps
-  targetNamespace: stratio-apps
+  targetNamespace: stratio-datastores
   interval: 5m
   retryInterval: 3m
   path: ./clusters/${CLUSTER_NAME}/secrets/dg-s3-agent
