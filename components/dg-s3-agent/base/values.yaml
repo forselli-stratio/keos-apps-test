@@ -21,7 +21,7 @@ data:
         initContainers:
           - name: connector-downloader
             image: qa.int.stratio.com/curlimages/curl
-            tag: 7.85.0
+            imageTag: 7.85.0
             command: ["sh", "-c", "wget -O /shared/sscc-s3-0.3_2.12-1.3.3-a14adae.jar http://qa.int.stratio.com/repository/new-releases/com/stratio/connectors/sscc-s3-0.3_2.12/1.3.3-a14adae/sscc-s3-0.3_2.12-1.3.3-a14adae.jar"]
             volumeMounts:
               - name: shared-data
