@@ -283,16 +283,16 @@ data:
         extraSelectorLabels:
           app: dg-s3-agent
     serviceAccount:
-    dg-s3-agent: {}
+      dg-s3-agent: {}
     serviceMonitors:
-    dg-s3-agent:
-      endpoints:
-      - interval: 30s
-        port: metrics
-        path: /metrics
-      extraSelectorLabels:
-        app: dg-s3-agent
-      labels: {}
+      dg-s3-agent:
+        endpoints:
+        - interval: 30s
+          port: metrics
+          path: /metrics
+        extraSelectorLabels:
+          app: dg-s3-agent
+        labels: {}
     extraDeploy:
       secretsbundle: |-
         apiVersion: secrets.stratio.com/v2
