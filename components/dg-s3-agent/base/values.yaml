@@ -18,6 +18,16 @@ data:
         extraSelectorLabels:
           app: dg-s3-agent
         serviceAccountName: dg-s3-agent
+        initContainers:
+          - name: connector-downloader
+            image: curlimages/curl:latest  # Or use a lightweight image with wget
+            command: ["sh", "-c", "wget -O /shared/sscc-s3-0.3_2.12-1.3.3-a14adae.jar http://qa.int.stratio.com/repository/new-releases/com/stratio/connectors/sscc-s3-0.3_2.12/1.3.3-a14adae/sscc-s3-0.3_2.12-1.3.3-a14adae.jar"]
+            volumeMounts:
+              - name: shared-data
+                mountPath: /shared
+        volumes:
+          - name: shared-data
+            type: emptyDir
         containers:
           - name: dg-s3-agent
             image: qa.int.stratio.com:11443/stratio/dg-custom-agent_2.12
@@ -58,7 +68,6 @@ data:
               allowPrivilegeEscalation: false
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
-
             env:
               - name: CUSTOM_SERVICE_DS_DRIVER
                 value: com.stratio.connectors.ssccs3.S3DriverServiceAccount
@@ -94,7 +103,7 @@ data:
               - name: COMM_SERVICE_VENDOR
                 value: Amazon
               - name: CUSTOM_SERVICE_SSCC_DRIVER_LOCATION
-                value: http://nginx-connectors.stratio-apps/sscc-s3-0.3_2.12-1.3.3-a14adae.jar
+                value: file:///shared/sscc-s3-0.3_2.12-1.3.3-a14adae.jar
               - name: JDBC_DISCOVERY_LEGACY_MODE
                 value: "false"
               - name: LEVERAGED_CONSTRAINTS
@@ -198,7 +207,7 @@ data:
               - name: DISCOVERY_DEPLOYMENT
                 value: dg-discovery-manager.keos-core
               - name: CUSTOM_SERVICE_DS_DRIVER_LOCATION
-                value: http://nginx-connectors.stratio-apps/sscc-s3-0.3_2.12-1.3.3-a14adae.jar
+                value: file:///shared/sscc-s3-0.3_2.12-1.3.3-a14adae.jar
               - name: AGENT_LOGGING_TYPE
                 value: CentralizedJSON
               - name: COMM_LOGIC_SCHEMA
@@ -274,6 +283,9 @@ data:
             envSecrets: []
             envsFromConfigmap: {}
             envConfigmaps: []
+            volumeMounts:
+              - name: shared-data
+                mountPath: /shared
     services:
       http:
         clusterIP: None
