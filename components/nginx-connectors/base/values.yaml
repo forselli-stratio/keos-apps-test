@@ -6,6 +6,7 @@ metadata:
 data:
   values.yaml: |
     ---
+    releasePrefix: "-"
     deployments:
       nginx-connectors:
         labels:
@@ -33,12 +34,12 @@ data:
             type: pvc
             originalName: nginx-connectors-data
     pvcs:
-      data:
+      nginx-connectors-data:
         accessModes:
           - ReadWriteOnce
         size: 1Gi
     services:
-      http:
+      nginx-connectors:
         clusterIP: None
         ports:
           - name: 80-80
