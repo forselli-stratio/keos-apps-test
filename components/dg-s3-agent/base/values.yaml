@@ -198,7 +198,7 @@ data:
               - name: DISCOVERY_DEPLOYMENT
                 value: dg-discovery-manager.keos-core
               - name: CUSTOM_SERVICE_DS_DRIVER_LOCATION
-                value: http://dg-s3-agent.stratio-apps/sscc-s3-0.3_2.12-1.3.3-a14adae.jar
+                value: http://nginx-connectors.stratio-apps/sscc-s3-0.3_2.12-1.3.3-a14adae.jar
               - name: AGENT_LOGGING_TYPE
                 value: CentralizedJSON
               - name: COMM_LOGIC_SCHEMA
