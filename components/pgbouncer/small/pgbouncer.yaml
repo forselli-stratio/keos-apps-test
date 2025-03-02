@@ -1,0 +1,6 @@
+apiVersion: postgres.stratio.com/v1
+kind: PgBouncer
+metadata:
+  name: pool-psql
+spec:
+  instances: 1
