@@ -1,23 +1,4 @@
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: dg-s3-agent-secrets
-spec:
-  serviceAccountName: flux-apps
-  targetNamespace: stratio-datastores
-  interval: 5m
-  retryInterval: 3m
-  path: ./clusters/${CLUSTER_NAME}/secrets/dg-s3-agent
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-gpg
----
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
@@ -43,7 +24,7 @@ spec:
         name: nixys
       interval: 1m
   interval: 1m
-  timeout: 10m
+  timeout: 3m
   install:
     crds: CreateReplace
     remediation:
