@@ -275,7 +275,7 @@ data:
             envsFromConfigmap: {}
             envConfigmaps: []
     services:
-      http:
+      dg-s3-agent:
         clusterIP: None
         ports:
           - name: metrics

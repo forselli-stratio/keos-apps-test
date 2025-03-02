@@ -177,7 +177,7 @@ data:
             envsFromConfigmap: {}
             envConfigmaps: []
     services:
-      http:
+      pg-gosec-agent:
         clusterIP: None
         ports:
           - name: http
