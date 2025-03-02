@@ -12,9 +12,9 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: pg-gosec-agent
+  name: postgres-agent
 spec:
-  releaseName: pg-gosec-agent
+  releaseName: postgres-agent
   chart:
     spec:
       chart: nxs-universal-chart
@@ -37,8 +37,8 @@ spec:
     force: false
   valuesFrom:
     - kind: ConfigMap
-      name: 00-pg-gosec-agent-helm-chart-default-values
+      name: 00-postgres-agent-helm-chart-default-values
       valuesKey: values.yaml
     - kind: ConfigMap
-      name: 02-pg-gosec-agent-helm-chart-override-values
+      name: 02-postgres-agent-helm-chart-override-values
       valuesKey: values.yaml

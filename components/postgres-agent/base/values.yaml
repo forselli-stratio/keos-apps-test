@@ -2,24 +2,24 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: 00-pg-gosec-agent-helm-chart-default-values
+  name: 00-postgres-agent-helm-chart-default-values
 data:
   values.yaml: |
     ---
     releasePrefix: "-"
     deployments:
-      pg-gosec-agent:
-        name: pg-gosec-agent
+      postgres-agent:
+        name: postgres-agent
         labels:
-          app: pg-gosec-agent
+          app: postgres-agent
         podLabels: {}
         podAnnotations: {}
         replicas: 1
         extraSelectorLabels:
-          app: pg-gosec-agent
-        serviceAccountName: pg-gosec-agent
+          app: postgres-agent
+        serviceAccountName: postgres-agent
         containers:
-          - name: pg-gosec-agent
+          - name: postgres-agent
             image: qa.int.stratio.com:11443/stratio/postgres-agent
             imageTag: 2.5.3
             livenessProbe:
@@ -72,7 +72,7 @@ data:
                 value: "-1"
               - name: AGENT_HEALTHCHECK_AUTHORIZED_CN
               - name: VAULT_ROLE
-                value: stratio-datastores_pg-gosec-agent
+                value: stratio-datastores_postgres-agent
               - name: JVM_MAX_HEAP
                 value: "350"
               - name: SERVICE_ID
@@ -104,7 +104,7 @@ data:
               - name: GOSEC_CONFIG_DAAS_TIMEOUT_MS
                 value: "3000"
               - name: KUBERNETES_SERVICE_NAME
-                value: pg-gosec-agent
+                value: postgres-agent
               - name: VAULT_PORT
                 value: "8200"
               - name: POSTGRES_HOST
@@ -158,7 +158,7 @@ data:
               - name: POSTGRES_CONFIG_STATEMENT_TIMEOUT
                 value: "30"
               - name: SERVICE_NAME_AGENT
-                value: pg-gosec-agent
+                value: postgres-agent
               - name: POSTGRES_SERVICE_NAME
                 value: psql.stratio-datastores
               - name: POSTGRES_CONFIG_IDENTITIES_WHITELIST
@@ -177,7 +177,7 @@ data:
             envsFromConfigmap: {}
             envConfigmaps: []
     services:
-      pg-gosec-agent:
+      postgres-agent:
         clusterIP: None
         ports:
           - name: http
@@ -185,28 +185,28 @@ data:
           - name: metrics
             port: 9187
         extraSelectorLabels:
-          app: pg-gosec-agent
+          app: postgres-agent
     serviceAccount:
-      pg-gosec-agent: {}
+      postgres-agent: {}
     serviceMonitors:
-      pg-gosec-agent:
+      postgres-agent:
         endpoints:
         - path: /prometheus
           port: metrics
         extraSelectorLabels:
-          app: pg-gosec-agent
+          app: postgres-agent
         labels: {}
     extraDeploy:
       secretsbundle: |-
         apiVersion: secrets.stratio.com/v2
         kind: SecretsBundle
         metadata:
-          name: pg-gosec-agent
+          name: postgres-agent
         spec:
           certificates:
           - altNames:
-            - pg-gosec-agent.stratio-datastores
-            - pg-gosec-agent
+            - postgres-agent.stratio-datastores
+            - postgres-agent
             commonName: pg-agent
             name: pg-agent
             role: client-server
@@ -216,19 +216,19 @@ data:
         apiVersion: secrets.stratio.com/v2
         kind: SecretsIdentity
         metadata:
-          name: pg-gosec-agent
+          name: postgres-agent
         spec:
           bundles:
           - name: psql
-          - name: pg-gosec-agent
+          - name: postgres-agent
           subject:
             kind: ServiceAccount
-            name: pg-gosec-agent
+            name: postgres-agent
             namespace: stratio-datastores
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: 02-pg-gosec-agent-helm-chart-override-values
+  name: 02-postgres-agent-helm-chart-override-values
 data:
   values.yaml: ""
