@@ -1,0 +1,234 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 00-pg-gosec-agent-helm-chart-default-values
+data:
+  values.yaml: |
+    ---
+    releasePrefix: "-"
+    deployments:
+      pg-gosec-agent:
+        name: pg-gosec-agent
+        labels:
+          app: pg-gosec-agent
+        podLabels: {}
+        podAnnotations: {}
+        replicas: 1
+        extraSelectorLabels:
+          app: pg-gosec-agent
+        serviceAccountName: pg-gosec-agent
+        containers:
+          - name: pg-gosec-agent
+            image: qa.int.stratio.com:11443/stratio/postgres-agent
+            imageTag: 2.5.3
+            livenessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: /liveness
+                port: http
+                scheme: HTTP
+              initialDelaySeconds: 2
+              periodSeconds: 5
+              successThreshold: 1
+              terminationGracePeriodSeconds: 30
+              timeoutSeconds: 1
+            ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+            - containerPort: 9187
+              name: metrics
+              protocol: TCP
+            readinessProbe:
+              failureThreshold: 1
+              httpGet:
+                path: /readiness
+                port: http
+                scheme: HTTP
+              initialDelaySeconds: 15
+              periodSeconds: 15
+              successThreshold: 1
+              timeoutSeconds: 1
+            resources:
+              limits:
+                cpu: 1500m
+                memory: "1.024E9"
+              requests:
+                cpu: 500m
+                memory: "1.024E9"
+            securityContext:
+              seccompProfile:
+                type: RuntimeDefault
+            dnsPolicy: ClusterFirst
+            priorityClassName: default-nonpreempting
+            restartPolicy: Always
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+            env:
+              - name: POSTGRES_TYPE
+                value: postgres
+              - name: AGENT_CONFIG_CONSECUTIVE_FAILURES
+                value: "-1"
+              - name: AGENT_HEALTHCHECK_AUTHORIZED_CN
+              - name: VAULT_ROLE
+                value: stratio-datastores_psql-agent
+              - name: JVM_MAX_HEAP
+                value: "350"
+              - name: SERVICE_ID
+                value: psql.stratio-datastores
+              - name: ENABLE_PROFILER
+                value: "false"
+              - name: AGENT_CONFIG_DOMAINS_MAPPING_PROPERTIES_CACHE_SIZE
+                value: "20"
+              - name: POSTGRES_CONFIG_GROUPS_PREFIX
+                value: stratio_group_
+              - name: AGENT_CONFIG_ORPHAN_POLICY
+                value: DENY
+              - name: AGENT_CONFIG_DOMAINS_MAPPING_PROPERTIES_CACHE_TTL
+                value: "20"
+              - name: POSTGRES_PORT
+                value: "5432"
+              - name: POSTGRES_CONFIG_REPARENT_OWNER
+                value: postgres
+              - name: AGENT_CONFIG_NUMBER_ITERATIONS
+                value: "-1"
+              - name: GOSEC_CONFIG_MODE
+                value: DAAS
+              - name: POSTGRES_CONFIG_REVOKE_PUBLIC
+                value: "true"
+              - name: AGENT_CONFIG_DOMAINS_MAPPING_URL
+                value: https://dg-businessglossary-api.keos-core:60000/dictionary
+              - name: POSTGRES_CONFIG_SOCKET_TIMEOUT
+                value: "30"
+              - name: GOSEC_CONFIG_DAAS_TIMEOUT_MS
+                value: "3000"
+              - name: KUBERNETES_SERVICE_NAME
+                value: psql-agent
+              - name: VAULT_PORT
+                value: "8200"
+              - name: POSTGRES_HOST
+                value: psql-primary.stratio-datastores
+              - name: POSTGRES_CONFIG_REPARENT_ENABLE
+                value: "false"
+              - name: PORT0
+                value: "8080"
+              - name: AGENT_HEALTHCHECK_ENABLE
+                value: "true"
+              - name: AGENT_CONFIG_DOMAINS_POLICIES_URL_TIMEOUT_MS
+                value: "3000"
+              - name: PORT1
+                value: "9187"
+              - name: POSTGRES_CONFIG_KEEP_CONNECTIONS
+                value: "true"
+              - name: POSTGRES_VERSION
+                value: "14"
+              - name: POSTGRES_CONFIG_MAX_POOL_SIZE
+                value: "2"
+              - name: AGENT_CONFIG_DOMAINS_POLICIES_URL
+                value: https://gosec-services-daas.keos-core:8443
+              - name: POSTGRES_SECURITY_TYPE
+                value: TLS
+              - name: POSTGRES_CONFIG_LOGIN_TIMEOUT
+                value: "30"
+              - name: POSTGRES_CONFIG_QUERY_BATCH_SIZE
+                value: "2500"
+              - name: STRATIO_LOG_LEVEL
+                value: INFO
+              - name: GOSEC_CONFIG_DAAS_IDENTITIES_URL
+                value: https://gosec-identities-daas.keos-core:8443
+              - name: AGENT_CONFIG_SLEEP_IN_MS
+                value: "15000"
+              - name: POSTGRES_CONFIG_CONNECT_TIMEOUT
+                value: "30"
+              - name: AGENT_CONFIG_CONFLICT_RESOLUTION
+                value: AND
+              - name: AGENT_CONFIG_DOMAINS_ENABLE
+                value: "false"
+              - name: AGENT_CONFIG_NUMBER_THREADS
+                value: "300"
+              - name: POSTGRES_CONFIG_RESOURCES_WHITELIST
+                value: COLUMNS
+              - name: GOSEC_CONFIG_DAAS_SERVICES_URL
+                value: https://gosec-services-daas.keos-core:8443
+              - name: JVM_MIN_HEAP
+                value: "350"
+              - name: KUBERNETES_SERVICE_NAMESPACE
+                value: stratio-datastores
+              - name: POSTGRES_CONFIG_STATEMENT_TIMEOUT
+                value: "30"
+              - name: SERVICE_NAME_AGENT
+                value: psql-agent
+              - name: POSTGRES_SERVICE_NAME
+                value: psql.stratio-datastores
+              - name: POSTGRES_CONFIG_IDENTITIES_WHITELIST
+                value: postgres,service,rewind,dbaas,replicator
+              - name: POSTGRES_CONFIG_REPARENT_WHITELIST
+              - name: GOSEC_CONFIG_DECOUPLED
+                value: "true"
+              - name: POSTGRES_CONFIG_WORK_MEM
+                value: 128MB
+              - name: VAULT_HOSTS
+                value: vault.keos-core
+              - name: AGENT_HEALTHCHECK_SECURE_ENABLE
+                value: "false"
+            envsFromSecret: {}
+            envSecrets: []
+            envsFromConfigmap: {}
+            envConfigmaps: []
+    services:
+      http:
+        clusterIP: None
+        ports:
+          - name: http
+            port: 8080
+          - name: metrics
+            port: 9187
+        extraSelectorLabels:
+          app: pg-gosec-agent
+    serviceAccount:
+      pg-gosec-agent: {}
+    serviceMonitors:
+      pg-gosec-agent:
+        endpoints:
+        - path: /prometheus
+          port: metrics
+        extraSelectorLabels:
+          app: pg-gosec-agent
+        labels: {}
+    extraDeploy:
+      secretsbundle: |-
+        apiVersion: secrets.stratio.com/v2
+        kind: SecretsBundle
+        metadata:
+          name: pg-gosec-agent
+        spec:
+          certificates:
+          - altNames:
+            - pg-gosec-agent.stratio-datastores
+            - pg-gosec-agent
+            commonName: pg-agent
+            name: pg-agent
+            role: client-server
+            type: generic
+          mount: userland
+      secretsidentity: |-
+        apiVersion: secrets.stratio.com/v2
+        kind: SecretsIdentity
+        metadata:
+          name: pg-gosec-agent
+        spec:
+          bundles:
+          - name: psql
+          - name: pg-gosec-agent
+          subject:
+            kind: ServiceAccount
+            name: pg-gosec-agent
+            namespace: stratio-datastores
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 02-pg-gosec-agent-helm-chart-override-values
+data:
+  values.yaml: ""

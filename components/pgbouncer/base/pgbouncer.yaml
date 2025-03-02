@@ -1,0 +1,79 @@
+apiVersion: postgres.stratio.com/v1
+kind: PgBouncer
+metadata:
+  name: pool-psql
+spec:
+  autoscaler:
+    vertical:
+      enable: true
+      resources:
+        controlledResources:
+        - cpu
+        - memory
+        controlledValues: RequestsAndLimits
+      updatePolicy:
+        minReplicas: 1
+        updateMode: "Off"
+  boutroni:
+    logLevel: INFO
+  config:
+    client_idle_timeout: "120"
+    default_pool_size: "50"
+    max_client_conn: "1000"
+    pool_mode: transaction
+    reserve_pool_size: "2"
+    reserve_pool_timeout: "1"
+    server_idle_timeout: "30"
+  exposition:
+    domain: ""
+    enable: false
+    externalDNS:
+      enable: true
+      hostnameKey: external-dns.alpha.kubernetes.io/hostname
+    serviceExternalTrafficPolicyType: Cluster
+  healthchecks:
+    livenessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 1
+    readinessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 15
+      periodSeconds: 15
+      successThreshold: 1
+      timeoutSeconds: 1
+  image: qa.int.stratio.com:11443/stratio/pgbouncer-task:0.8.3-2d1c431
+  imagePullPolicy: Always
+  instances: 2
+  monitoring:
+    enable: true
+    interval: 30s
+  podDisruptionBudget:
+    enable: true
+    minAvailable: 1
+  postgresql:
+    connectionMode: PRIMARY
+    name: psql
+    namespace: stratio-datastores
+  priorityClassName: applications-critical
+  resources:
+    limits:
+      cpu: 800m
+      memory: 768M
+    requests:
+      cpu: 100m
+      memory: 768M
+  secrets:
+    create: true
+  security:
+    authentication: CERT
+    serviceAccount:
+      create: true
+      name: pool-psql
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
