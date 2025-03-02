@@ -204,14 +204,9 @@ data:
           name: postgres-agent
         spec:
           certificates:
-          - altNames:
-            - postgres-agent.stratio-datastores
-            - postgres-agent
-            commonName: pg-agent
-            name: pg-agent
-            role: client-server
-            type: generic
-          mount: userland
+          - name: pg-agent
+          passwords:
+          - name: keystore
       secretsidentity: |-
         apiVersion: secrets.stratio.com/v2
         kind: SecretsIdentity
