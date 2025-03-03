@@ -10,9 +10,9 @@ data:
     deployments:
       dg-s3-agent:
         name: dg-s3-agent
-        labels:
-          app: dg-s3-agent
-        podLabels: {}
+        labels: {}
+        podLabels:
+          app.kubernetes.io/component: dg-agent
         podAnnotations: {}
         replicas: 1
         extraSelectorLabels:
@@ -192,7 +192,7 @@ data:
               - name: DEBUG
                 value: "false"
               - name: EXTRACT_INSTANCE
-                value: dg-s3-agent.stratio-datastores
+                value: dg-s3-agent
               - name: PORT_13421
                 value: "13421"
               - name: DISCOVERY_DEPLOYMENT
@@ -304,9 +304,10 @@ data:
             secrets.stratio.com/sync-secret: stratio-datastores/dg-s3-agent-s3
         spec:
           certificates:
-          - name: dg-s3-agent.stratio-datastores
+          - name: dg-s3-agent
           passwords:
-          - name: dg-s3-agent-stratio-datastores
+          - name: dg-s3-agent
+            user: dg-s3-agent.stratio-datastores
           - name: keystore
           - name: customer-s3-secret
       secretsidentity: |-
