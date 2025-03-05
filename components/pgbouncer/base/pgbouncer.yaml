@@ -44,7 +44,7 @@ spec:
       periodSeconds: 15
       successThreshold: 1
       timeoutSeconds: 1
-  image: qa.int.stratio.com:11443/stratio/pgbouncer-task:0.8.3-2d1c431
+  image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_REPOSITORY_PREFIX:=/}stratio/pgbouncer-task:0.8.3-2d1c431
   imagePullPolicy: Always
   instances: 2
   monitoring:

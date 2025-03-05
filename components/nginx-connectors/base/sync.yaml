@@ -5,9 +5,9 @@ metadata:
   name: nixys
 spec:
   interval: 1m
-  provider: generic
-  type: default
-  url: https://registry.nixys.io/chartrepo/public
+  provider: aws
+  type: oci
+  url: oci://${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_HELM_CHARTS_REPOSITORY_PREFIX}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
