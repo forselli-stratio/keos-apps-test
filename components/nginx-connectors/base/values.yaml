@@ -42,11 +42,6 @@ data:
         volumes:
           - name: connector
             type: emptyDir
-    pvcs:
-      nginx-connectors-data:
-        accessModes:
-          - ReadWriteOnce
-        size: 1Gi
     services:
       nginx-connectors:
         clusterIP: None
