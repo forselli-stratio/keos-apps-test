@@ -20,7 +20,7 @@ data:
         serviceAccountName: postgres-agent
         containers:
           - name: postgres-agent
-            image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_IMAGES_REPOSITORY_PREFIX:=/}stratio/postgres-agent
+            image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_IMAGES_REPOSITORY_PREFIX}/stratio/postgres-agent
             imageTag: 2.5.3
             livenessProbe:
               failureThreshold: 3

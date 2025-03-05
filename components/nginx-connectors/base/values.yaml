@@ -26,8 +26,7 @@ data:
               mountPath: "/connector"
         containers:
           - name: nginx
-            image: qa.int.stratio.com/nginx
-            imageTag: 1.17.6-alpine
+            image: nginx:alpine
             env: []
             envsFromSecret: {}
             envSecrets: []
