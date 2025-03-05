@@ -29,7 +29,8 @@ data:
               mountPath: "/connector"
         containers:
           - name: nginx
-            image: nginx:alpine
+            image: nginx
+            imageTag: alpine
             env: []
             envsFromSecret: {}
             envSecrets: []
