@@ -20,10 +20,7 @@ data:
         initContainers:
           - name: connector-downloader
             image: amazon/aws-cli
-            command: ["sh", "-c", "aws s3 cp s3://stratio-universe-artifacts/universe-14.7.0-5207e9c/connectors/sscc-s3-0.3_2.12-1.3.3-a14adae.jar /connector/sscc-s3-0.3_2.12-1.3.3-a14adae.jar"]
-            envFrom:
-              - secretRef:
-                  name: nginx-connectors-s3
+            command: ["sh", "-c", "aws s3 cp s3://aws-clusters-automations-shared-stratio-universe-artifacts/sscc-s3-0.3_2.12-1.3.3-a14adae.jar /connector/sscc-s3-0.3_2.12-1.3.3-a14adae.jar"]
             volumeMounts:
             - name: connector
               mountPath: "/connector"
