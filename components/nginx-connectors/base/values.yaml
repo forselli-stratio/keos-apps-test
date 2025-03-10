@@ -16,11 +16,11 @@ data:
         replicas: 1
         extraSelectorLabels:
           app: nginx-connectors
-        serviceAccountName: ""
+        serviceAccountName: "nginx-connectors"
         initContainers:
           - name: connector-downloader
             image: amazon/aws-cli
-            command: ["sh", "-c", "aws s3 cp s3://aws-clusters-automations-shared-stratio-universe-artifacts/sscc-s3-0.3_2.12-1.3.3-a14adae.jar /connector/sscc-s3-0.3_2.12-1.3.3-a14adae.jar"]
+            command: ["sh", "-c", "aws s3 cp s3://${AWS_SHARED_STRATIO_UNIVERSE_ARTIFACTS_BUCKET_NAME}/sscc-s3-0.3_2.12-1.3.3-a14adae.jar /connector/sscc-s3-0.3_2.12-1.3.3-a14adae.jar"]
             volumeMounts:
             - name: connector
               mountPath: "/connector"
@@ -49,6 +49,10 @@ data:
             targetPort: 80
         extraSelectorLabels:
           app: nginx-connectors
+    serviceAccount:
+      nginx-connectors:
+        annotations:
+          eks.amazonaws.com/role-arn: ${NGINX_CONNECTORS_SERVICE_ACCOUNT_ROLE_ARN}
 ---
 apiVersion: v1
 kind: ConfigMap
