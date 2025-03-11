@@ -58,7 +58,6 @@ data:
               allowPrivilegeEscalation: false
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
-
             env:
               - name: CUSTOM_SERVICE_DS_DRIVER
                 value: com.stratio.connectors.ssccs3.S3DriverServiceAccount

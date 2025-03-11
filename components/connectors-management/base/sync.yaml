@@ -12,9 +12,9 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: nginx-connectors
+  name: connectors-management
 spec:
-  releaseName: nginx-connectors
+  releaseName: connectors-management
   chart:
     spec:
       chart: nxs-universal-chart
@@ -37,8 +37,8 @@ spec:
     force: false
   valuesFrom:
     - kind: ConfigMap
-      name: 00-nginx-connectors-helm-chart-default-values
+      name: 00-connectors-management-helm-chart-default-values
       valuesKey: values.yaml
     - kind: ConfigMap
-      name: 02-nginx-connectors-helm-chart-override-values
+      name: 02-connectors-management-helm-chart-override-values
       valuesKey: values.yaml

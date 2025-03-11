@@ -1,0 +1,170 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 00-connectors-management-helm-chart-default-values
+data:
+  values.yaml: |
+    ---
+    releasePrefix: "-"
+    deployments:
+      connectors-management:
+        labels:
+          app: connectors-management
+        podLabels: {}
+        podAnnotations: {}
+        replicas: 1
+        extraSelectorLabels:
+          app: connectors-management
+        serviceAccountName: "connectors-management"
+        containers:
+          - name: connectors-management
+            image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_IMAGES_REPOSITORY_PREFIX}/stratio/connectors
+            imageTag: 1.6.6
+            livenessProbe:
+              failureThreshold: 25
+              httpGet:
+                path: /health
+                port: connectors-port
+                scheme: HTTP
+              initialDelaySeconds: 30
+              periodSeconds: 15
+              successThreshold: 1
+              terminationGracePeriodSeconds: 30
+              timeoutSeconds: 10
+            ports:
+            - containerPort: 80
+              name: connectors-port
+              protocol: TCP
+            readinessProbe:
+              failureThreshold: 2
+              httpGet:
+                path: /health
+                port: connectors-port
+                scheme: HTTP
+              initialDelaySeconds: 30
+              periodSeconds: 5
+              successThreshold: 1
+              timeoutSeconds: 10
+            resources:
+              limits:
+                cpu: 750m
+                memory: "1.536E9"
+              requests:
+                cpu: 250m
+                memory: "1.536E9"
+            securityContext:
+              allowPrivilegeEscalation: false
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+            env:
+              - name: VAULT_ROLE
+                value: stratio-apps-connectors-management
+              - name: APP_API_PORT
+                value: "80"
+              - name: VAULT_PROTOCOL
+                value: HTTPS
+              - name: SERVICE_ID
+                value: connectors-management
+              - name: JWT_SECRET_EXPIRATION
+                value: "172800"
+              - name: API_SSL_ENABLED
+                value: "false"
+              - name: VAULT_PORT
+                value: "8200"
+              - name: VAULT_ENABLE
+                value: "true"
+              - name: VAULT_HOST
+                value: vault.keos-core
+              - name: INSTANCE_NAME
+                value: connectors-management.stratio-apps
+              - name: SQLITE_PATH
+                value: /data/
+              - name: CUSTOM_STRATIO_CREDENTIALS
+                value: connectors-secret
+              - name: FILESYSTEM_ROOTPATH
+                value: /data/artifacts/
+              - name: VIRTUAL_HOST
+                value: connectors-management.stratio.k8s.eosdev2.labs.stratio.com
+              - name: SQLITE_DATABASE_NAME
+                value: connectors.sqlite
+            envsFromSecret: {}
+            envSecrets: []
+            envsFromConfigmap: {}
+            envConfigmaps: []
+            volumeMounts:
+              - name: connectors-management-artifacts
+                mountPath: /data/artifacts/
+        volumes:
+          - name: connectors-management-artifacts
+            type: pvc
+            originalName: connectors-management-artifacts
+    pvcs:
+      connectors-management-artifacts:
+        accessModes:
+          - ReadWriteOnce
+        size: 10Gi
+    services:
+      connectors-management:
+        clusterIP: None
+        ports:
+          - name: connectors-port
+            port: 80
+        extraSelectorLabels:
+          app: connectors-management
+    serviceAccount:
+      connectors-management: {}
+    ingresses:
+    connectors-management:
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: HTTP
+        nginx.ingress.kubernetes.io/proxy-body-size: "0"
+        nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+        nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+        nginx.ingress.kubernetes.io/x-forwarded-prefix: /connectors-management
+      ingressClassName: default-ingress-class
+      hosts:
+      - host: connectors-management.stratio.k8s.eosdev2.labs.stratio.com
+        paths:
+        - serviceName: connectors-management
+          servicePort: connectors-port
+          path: /connectors-management(/|$)(.*)
+    extraDeploy:
+      secretsbundle: |-
+        apiVersion: secrets.stratio.com/v2
+        kind: SecretsBundle
+        metadata:
+          name: connectors-management
+          namespace: stratio-apps
+        spec:
+          certificates:
+          - name: connectors-management
+          passwords:
+          - name: connectors-secret
+            user: admin
+          - name: jwtsecret
+            length: 10
+          - name: keystore
+            length: 10
+      secretsidentity: |-
+        apiVersion: secrets.stratio.com/v2
+        kind: SecretsIdentity
+        metadata:
+          name: connectors-management
+          namespace: stratio-apps
+        spec:
+          bundles:
+          - name: connectors-management
+          subject:
+            kind: ServiceAccount
+            name: connectors-management
+            namespace: stratio-apps
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 02-connectors-management-helm-chart-override-values
+data:
+  values.yaml: ""
