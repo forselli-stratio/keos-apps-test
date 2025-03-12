@@ -5,7 +5,7 @@ metadata:
   name: nixys
 spec:
   interval: 5m
-  provider: aws
+  provider: ${CONTAINER_REGISTRY_PROVIDER}
   type: ${CONTAINER_REGISTRY_TYPE}
   url: ${CONTAINER_REGISTRY_TYPE/default/http}://${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_HELM_CHARTS_REPOSITORY_PREFIX}
 ---
