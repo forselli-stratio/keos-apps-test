@@ -149,7 +149,7 @@ data:
             secrets.stratio.com/sync-secret: stratio-apps/connectors-management
         spec:
           certificates:
-          - name: connectors-management
+          - name: connectors-management.stratio-apps
           passwords:
           - name: connectors-secret
           - name: jwtsecret
