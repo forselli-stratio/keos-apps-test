@@ -132,18 +132,26 @@ data:
           servicePort: connectors-port
           path: /connectors-management(/|$)(.*)
     extraDeploy:
+      secret: |-
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: connectors-management
+        data:
+          bundle: "cGFzc3dvcmRzOgogIC0gbmFtZTogY29ubmVjdG9ycy1zZWNyZXQKICAgIGRhdGE6IAogICAgICB1c2VyOiBhZG1pbgogICAgICBwYXNzOiBTdHJhdGlvJTIwMjUK"
       secretsbundle: |-
         apiVersion: secrets.stratio.com/v2
         kind: SecretsBundle
         metadata:
           name: connectors-management
           namespace: stratio-apps
+          annotations:
+            secrets.stratio.com/sync-secret: stratio-apps/connectors-management
         spec:
           certificates:
           - name: connectors-management
           passwords:
           - name: connectors-secret
-            user: admin
           - name: jwtsecret
             length: 10
           - name: keystore
