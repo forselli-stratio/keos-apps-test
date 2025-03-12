@@ -174,7 +174,7 @@ data:
         kind: "post-install,post-upgrade"
         serviceAccount: connectors-management
         containers:
-        - image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_REPOSITORY_PREFIX}/stratio/connectors
+        - image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_REPOSITORY_PREFIX}/stratio/connectors-loader
           imageTag: 1.6.6
           env:
             - name: CONNECTORS_MANAGEMENT_API_HOST
@@ -182,15 +182,11 @@ data:
             - name: CONNECTORS_MANAGEMENT_API_PORT
               value: "80"
             - name: CONNECTORS_LOADER_LOG_LEVEL
-              value: "DEBUG"
+              value: "INFO"
             - name: CONNECTORS_LOADER_SECRET_NAME
               value: "connectors-secret"
             - name: VAULT_HOST
               value: "vault.keos-core"
-            - name: INSTANCE_NAME
-              value: connectors-management.stratio-apps
-            - name: CUSTOM_STRATIO_CREDENTIALS
-              value: connectors-secret
             - name: VAULT_PORT
               value: "8200"
             - name: VAULT_ROLE
