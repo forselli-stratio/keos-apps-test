@@ -185,7 +185,7 @@ data:
               value: "INFO"
             - name: CONNECTORS_LOADER_SECRET_NAME
               value: "connectors-secret"
-            - name: VAULT_HOST
+            - name: VAULT_HOSTS
               value: "vault.keos-core"
             - name: VAULT_PORT
               value: "8200"
