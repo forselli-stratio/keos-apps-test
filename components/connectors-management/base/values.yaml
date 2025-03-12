@@ -182,11 +182,15 @@ data:
             - name: CONNECTORS_MANAGEMENT_API_PORT
               value: "80"
             - name: CONNECTORS_LOADER_LOG_LEVEL
-              value: "INFO"
+              value: "DEBUG"
             - name: CONNECTORS_LOADER_SECRET_NAME
               value: "connectors-secret"
-            - name: VAULT_HOSTS
+            - name: VAULT_HOST
               value: "vault.keos-core"
+            - name: INSTANCE_NAME
+              value: connectors-management.stratio-apps
+            - name: CUSTOM_STRATIO_CREDENTIALS
+              value: connectors-secret
             - name: VAULT_PORT
               value: "8200"
             - name: VAULT_ROLE
