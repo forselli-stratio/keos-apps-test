@@ -20,7 +20,7 @@ data:
         serviceAccountName: dg-s3-agent
         containers:
           - name: dg-s3-agent
-            image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_IMAGES_REPOSITORY_PREFIX}/stratio/dg-custom-agent_2.12
+            image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_REPOSITORY_PREFIX}/stratio/dg-custom-agent_2.12
             imageTag: 0.7.0
             livenessProbe:
               failureThreshold: 3

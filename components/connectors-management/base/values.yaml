@@ -19,7 +19,7 @@ data:
         serviceAccountName: "connectors-management"
         containers:
           - name: connectors-management
-            image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_IMAGES_REPOSITORY_PREFIX}/stratio/connectors
+            image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_REPOSITORY_PREFIX}/stratio/connectors
             imageTag: 1.6.6
             livenessProbe:
               failureThreshold: 25
@@ -166,7 +166,7 @@ data:
         kind: "post-install,post-upgrade"
         serviceAccount: connectors-management
         containers:
-        - image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_IMAGES_REPOSITORY_PREFIX}/stratio/connectors
+        - image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_REPOSITORY_PREFIX}/stratio/connectors
           imageTag: 1.6.6
           env:
             - name: CONNECTORS_MANAGEMENT_API_HOST
