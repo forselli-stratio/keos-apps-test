@@ -7,7 +7,7 @@ spec:
   interval: 5m
   provider: aws
   type: ${CONTAINER_REGISTRY_TYPE}
-  url: ${CONTAINER_REGISTRY_TYPE/generic/http}://${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_HELM_CHARTS_REPOSITORY_PREFIX}
+  url: ${CONTAINER_REGISTRY_TYPE/default/http}://${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_HELM_CHARTS_REPOSITORY_PREFIX}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
