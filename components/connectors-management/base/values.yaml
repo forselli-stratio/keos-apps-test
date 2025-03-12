@@ -161,6 +161,33 @@ data:
             kind: ServiceAccount
             name: connectors-management
             namespace: stratio-apps
+    hooks:
+      connectors-loader:
+        kind: "post-install,post-upgrade"
+        serviceAccount: connectors-management
+        containers:
+        - image: ${CONTAINER_REGISTRY_URL}${CONTAINER_REGISTRY_IMAGES_REPOSITORY_PREFIX}/stratio/connectors
+          imageTag: 1.6.6
+          env:
+            - name: CONNECTORS_MANAGEMENT_API_HOST
+              value: "connectors-management"
+            - name: CONNECTORS_MANAGEMENT_API_PORT
+              value: "80"
+            - name: CONNECTORS_LOADER_LOG_LEVEL
+              value: "INFO"
+            - name: CONNECTORS_LOADER_SECRET_NAME
+              value: "connectors-secret"
+            - name: VAULT_HOSTS
+              value: "vault.keos-core"
+            - name: VAULT_PORT
+              value: "8200"
+            - name: VAULT_ROLE
+              value: "stratio-apps-connectors-management"
+            - name: VAULT_PATH
+              value: "userland"
+            - name: EXTRACT_PATH
+              value: "connectors-management.stratio-apps"
+        restartPolicy: OnFailure
 ---
 apiVersion: v1
 kind: ConfigMap
