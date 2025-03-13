@@ -300,7 +300,7 @@ data:
           name: dg-s3-agent
           namespace: stratio-datastores
           annotations:
-            secrets.stratio.com/sync-secret: stratio-datastores/dg-s3-agent-s3
+            secrets.stratio.com/sync-secret: stratio-datastores/customer-s3-secret
         spec:
           certificates:
           - name: dg-s3-agent
