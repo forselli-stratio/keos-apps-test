@@ -4,7 +4,7 @@ kind: HelmRepository
 metadata:
   name: nixys
 spec:
-  interval: 5m
+  interval: 1m
   provider: ${HELM_REGISTRY_PROVIDER}
   type: ${HELM_REGISTRY_TYPE}
   url: ${HELM_REGISTRY_TYPE/default/http}://${HELM_REGISTRY_URL}${HELM_REGISTRY_REPOSITORY_PREFIX}
@@ -24,7 +24,7 @@ spec:
         name: nixys
       interval: 1m
   interval: 1m
-  timeout: 3m
+  timeout: 5m
   install:
     crds: CreateReplace
     remediation:
