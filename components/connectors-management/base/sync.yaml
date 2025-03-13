@@ -5,7 +5,7 @@ metadata:
   name: nixys
 spec:
   interval: 1m
-  provider: ${HELM_REGISTRY_PROVIDER}
+  provider: ${HELM_REGISTRY_PROVIDER:-default}
   type: ${HELM_REGISTRY_TYPE}
   url: ${HELM_REGISTRY_TYPE/default/http}://${HELM_REGISTRY_URL}${HELM_REGISTRY_REPOSITORY_PREFIX}
 ---
