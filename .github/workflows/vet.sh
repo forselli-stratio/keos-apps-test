@@ -33,7 +33,7 @@ find . -type f -name $kustomize_config -print0 | while IFS= read -r -d $'\0' fil
   # Replace placeholders with defaults
   sed -i 's/${HELM_REGISTRY_TYPE}/default/g' "$temp_file"
   sed -i 's/${HELM_REGISTRY_PROVIDER}/generic/g' "$temp_file"
-  sed -i 's#${HELM_REGISTRY_URL}#qa.int.stratio.com#g' "$temp_file"
+  sed -i 's#${HELM_REGISTRY_URL}#http://qa.int.stratio.com#g' "$temp_file"
   sed -i 's#${HELM_REGISTRY_REPOSITORY_PREFIX}##g' "$temp_file"
 
   # Validate the processed YAML
