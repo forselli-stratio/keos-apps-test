@@ -93,7 +93,7 @@ data:
               - name: COMM_SERVICE_VENDOR
                 value: Amazon
               - name: CUSTOM_SERVICE_SSCC_DRIVER_LOCATION
-                value: http://nginx-connectors.stratio-apps/sscc-s3-0.3_2.12-1.3.3-a14adae.jar
+                value: http://connectors-management.stratio-apps/v1/api/artifact/Connector_sscc-s3_2.12_1.3.3.jar
               - name: JDBC_DISCOVERY_LEGACY_MODE
                 value: "false"
               - name: LEVERAGED_CONSTRAINTS
