@@ -269,6 +269,8 @@ data:
                 value: vault.keos-core
               - name: DB_CERT_PATH
                 value: dg-bootstrap.keos-core
+              - name: DEMO
+                value: "true"
             envsFromSecret: {}
             envSecrets: []
             envsFromConfigmap: {}
